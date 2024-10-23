@@ -1,49 +1,106 @@
+
 # Todo List API
 
+This project is a simple RESTful API for managing a Todo List built using Golang, Gin, and a global in-memory store (which can be later replaced with Postgres or Redis).
 
-## MVP Features
+## Installation
 
-### 1. **Create a Task**
-   - **Endpoint:** `POST /tasks`
-   - Receives task title, description, due date, etc.
-   - Saves the data into Postgres or SQLite.
-   - Returns the details of the newly created task.
+If you are new to the project, follow these steps to set up the environment and install the necessary dependencies.
 
-### 2. **Get All Tasks**
-   - **Endpoint:** `GET /tasks`
-   - Retrieves a list of all pending tasks.
-   - Optionally support pagination and sorting (e.g., by creation time or due date).
-   - Use Redis for caching to reduce frequent database queries.
+### Prerequisites
+- **Go 1.16 or higher** is required. You can install Go from [the official website](https://golang.org/dl/).
 
-### 3. **Get a Single Task**
-   - **Endpoint:** `GET /tasks/:id`
-   - Fetches a specific task by its ID and returns its details.
-   - Consider caching the result in Redis to speed up retrieval.
+### Setup Instructions
 
-### 4. **Update a Task**
-   - **Endpoint:** `PUT /tasks/:id`
-   - Updates a task by ID (e.g., title, description, status).
-   - After updating in the database, also update Redis cache.
+1. **Clone the repository**
+   Clone the project from GitHub:
+   ```bash
+   git clone git@github.com:nicehorse06/todo-list-api.git
+   cd todo-list-api
+   ```
 
-### 5. **Delete a Task**
-   - **Endpoint:** `DELETE /tasks/:id`
-   - Deletes a task by ID, removes it from the database, and clears the Redis cache.
+2. **Initialize the Go module**
+   Ensure the project is using Go modules. Run the following command to initialize Go modules if it hasn't been done yet:
+   ```bash
+   go mod init github.com/nicehorse06/todo-list-api
+   ```
 
-### 6. **Mark Task as Complete**
-   - **Endpoint:** `PATCH /tasks/:id/complete`
-   - Changes the task status to "complete."
+3. **Install dependencies**
+   Use `go get` to install all required dependencies for this project, including the Gin framework and testing libraries:
+   ```bash
+   go get -u github.com/gin-gonic/gin
+   go get -u github.com/stretchr/testify/assert
+   ```
 
-## Database Schema
+   Alternatively, if the `go.mod` file is present, run the following to install dependencies:
+   ```bash
+   go mod tidy
+   ```
 
-**Tasks Table** (Postgres or SQLite)
+4. **Run the application**
+   After installing dependencies, you can run the project with the following command:
+   ```bash
+   go run main.go
+   ```
 
-```sql
-CREATE TABLE tasks (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-    due_date TIMESTAMP,
-    status VARCHAR(20) DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+5. **Run the tests**
+   To run the test cases and ensure everything is working properly, execute:
+   ```bash
+   go test -v
+   ```
+
+## go CLI Commands
+
+Here are some useful Go CLI commands to work with the project.
+
+### Run the API server
+
+Use the following command to start the API server:
+```bash
+go run main.go
+```
+
+This will start the server at `localhost:8080`, and you can access the endpoints such as `http://localhost:8080/tasks`.
+
+### Run the tests
+
+Use the following command to run all the test cases:
+```bash
+go test -v
+```
+
+The `-v` flag provides verbose output, showing detailed information for each test case.
+
+## Endpoints
+
+The following endpoints are available:
+
+1. **Create a Task**
+   - **POST** `/tasks`
+   - Body parameters: `title`, `description`, `due_date`
+   - Response: Returns the created task details
+
+2. **Get All Tasks**
+   - **GET** `/tasks`
+   - Response: Returns a list of all tasks
+
+3. **Get a Single Task**
+   - **GET** `/tasks/:id`
+   - Parameters: `id` (the task ID)
+   - Response: Returns the task details by its ID
+
+4. **Update a Task**
+   - **PUT** `/tasks/:id`
+   - Parameters: `id` (the task ID)
+   - Body parameters: `title`, `description`, `status`
+   - Response: Returns the updated task details
+
+5. **Delete a Task**
+   - **DELETE** `/tasks/:id`
+   - Parameters: `id` (the task ID)
+   - Response: Deletes the task and returns a success message
+
+6. **Mark Task as Complete**
+   - **PATCH** `/tasks/:id/complete`
+   - Parameters: `id` (the task ID)
+   - Response: Marks the task as complete and returns the updated task details
